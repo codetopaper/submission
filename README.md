@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py --noise_rate 0.2 --form pw --retrain_file_
 
 #### 2.2 To generate your own retrain csv, please follow below command:
 
-##### 2.2.1 First, generate LID sequences. There are uniform alpha vectors and 10 random seeds pre-set in the code. The preprocessed cifar-10 data can be found in the experiment section in https://github.com/xiaoboxia/T-Revision. Running below example would generate LID sequences from the pre-set alpha vectors and the 10 random seeds for a noisy dataset with pairwise noise rate 0.2:
+##### 2.2.1 First, generate LID sequences. There are uniform alpha vectors and 10 random seeds pre-set in the code. The cifar-10 data in .npy format can be found in the experiment section in https://github.com/xiaoboxia/T-Revision. Running below example would generate LID sequences from the pre-set alpha vectors and the 10 random seeds for a noisy dataset with pairwise noise rate 0.2:
 An example: <br/>
 ```
 CUDA_VISIBLE_DEVICES=0 python LID_generation.py --form pw --noise_rate 0.2
