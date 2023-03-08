@@ -59,7 +59,7 @@ def manipulate_labels(given_dataset_labels, dataset, c_class=0, noise_ratio=0, r
 '''
 
 class clothing_dataset(data_utl.Dataset): 
-    def __init__(self, noise_ratio, random_seed, transform, mode):
+    def __init__(self, dir, noise_ratio, random_seed, transform, mode):
         self.train_imgs = []
         self.test_imgs = []
 
@@ -69,26 +69,32 @@ class clothing_dataset(data_utl.Dataset):
         self.transform = transform
         self.mode = mode
 
-        with open('../images/clean_test_key_list.txt','r') as f:#clean_test_key_list.txt
+        #with open('../images/clean_test_key_list.txt','r') as f:#clean_test_key_list.txt
+        with open(dir+'/clean_test_key_list.txt','r') as f:#clean_test_key_list.txt
             lines = f.read().splitlines()
         for l in lines:
-            img_path = '../images/'+l[7:] #this replaces ./images/ to ./data/
+            #img_path = '../images/'+l[7:] #this replaces ./images/ to ./data/
+            img_path = dir+'/'+l[7:] #this replaces ./images/ to ./data/
             self.test_imgs.append(img_path)
         
-        with open('../images/clean_label_kv.txt','r') as f:
+        #with open('../images/clean_label_kv.txt','r') as f:
+        with open(dir+'/clean_label_kv.txt','r') as f:
             lines = f.read().splitlines()
         for l in lines:
             entry = l.split() #eg, ['images/7/88/339645240,2782721788.jpg', '9']          
-            img_path = '../images/'+entry[0][7:] #this gives the image path, eg, './data/7/88/339645240,2782721788.jpg'
+            #img_path = '../images/'+entry[0][7:] #this gives the image path, eg, './data/7/88/339645240,2782721788.jpg'
+            img_path = dir+'/'+entry[0][7:] #this gives the image path, eg, './data/7/88/339645240,2782721788.jpg'
             self.test_labels[img_path] = int(entry[1])  
                    
         #with open('../images/matrix_subset_noisy_clean_subset_1.5k.txt','r') as f:
         #with open('../images/test_matrix_subset_noisy_clean_subset.txt','r') as f:
-        with open('../images/matrix_subset_noisy_clean.txt','r') as f:
+        #with open('../images/matrix_subset_noisy_clean.txt','r') as f:
+        with open(dir+'/matrix_subset_noisy_clean.txt','r') as f:
             lines = f.read().splitlines()
        
         for l in lines:
-            self.train_imgs.append('../'+l.split()[0])
+            #self.train_imgs.append('../'+l.split()[0])
+            self.train_imgs.append(dir+'/'+l[7:].split()[0])
             self.train_labels.append(int(l.split()[1]))#list version noisy set labels, if l.split()[2] then corresponding clean labels
 
 
@@ -134,13 +140,15 @@ class clothing_dataset(data_utl.Dataset):
 
 
 class clothing_LID(data_utl.Dataset): 
-    def __init__(self, selected_indices, transform): 
+    def __init__(self, dir, selected_indices, transform): 
         self.transform = transform
         self.LID_imgs = []
-        with open('../images/matrix_subset_noisy_clean.txt','r') as f:
+        #with open('../images/matrix_subset_noisy_clean.txt','r') as f:
+        with open(dir+'/matrix_subset_noisy_clean.txt','r') as f:
             lines = f.read().splitlines()
         for l in selected_indices:
-            self.LID_imgs.append('../'+lines[l].split()[0])
+            #self.LID_imgs.append('../'+lines[l].split()[0])
+            self.LID_imgs.append(dir+'/'+lines[l].split()[0][7:])
 
             
     def __getitem__(self, index):  
