@@ -37,18 +37,18 @@ class ResNet_2fc(nn.Module):
         x = self.fc_layer_2(lid_feature)
         return(x, lid_feature)
 
-def train(class_no = 0, batch_size=128, epochs=50, random_seed=1, noise_ratio=0, dataset='clothing1m'):
+def train(dir='../../../../clothing1m/images', class_no = 0, batch_size=128, epochs=50, random_seed=1, noise_ratio=0, dataset='clothing1m'):
 
 
     print(noise_ratio)
     if dataset=='clothing1m':
         make_determine()
-        train_data = clothing_dataset(noise_ratio, random_seed, transform=clothing_tran('train'), mode='train')
+        train_data = clothing_dataset(dir, noise_ratio, random_seed, transform=clothing_tran('train'), mode='train')
         train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size, shuffle=True, num_workers=0, drop_last=False)
         data_length = len(train_data)
 
         make_determine()
-        test_data = clothing_dataset(noise_ratio, random_seed, transform=clothing_tran('test'), mode='test')
+        test_data = clothing_dataset(dir, noise_ratio, random_seed, transform=clothing_tran('test'), mode='test')
         test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=0, drop_last=False)
 
         make_determine()
@@ -164,7 +164,7 @@ def train(class_no = 0, batch_size=128, epochs=50, random_seed=1, noise_ratio=0,
         for key in data_points:
 
             if dataset=='clothing1m':
-                lid_data = clothing_LID(data_points[key], clothing_tran('test'))
+                lid_data = clothing_LID(dir, data_points[key], clothing_tran('test'))
                 lid_loader = torch.utils.data.DataLoader(lid_data, batch_size=len(data_points[key]), shuffle=True, num_workers=0, drop_last=False)
             model.train()
             ft_list = []
@@ -220,19 +220,24 @@ if __name__ == "__main__":
     parser.add_argument(
         '-s', '--random_seed',
         help="The default 20 random seeds are: 0, 235, 905, 1286, 2048, 4096, 5192, 7813, 11247, 11946, 14557, 16860, 21347, 27718, 35697, 35715, 37330, 40526, 43412, 45270.",
-        required=False, type=int
+        required=False, type=int, default = 0
+    )
+    parser.add_argument(
+        '-d', '--dir',
+        help="The dataset directory.",
+        required=False, type=str, default='../../../../clothing1m/images'
     )
 
     args = parser.parse_args()
 
 
     num_classes = 14
-    abase = {'1010': {}, '0': {}, '300': {}, '830': {}, '840': {},\
-             '850': {}, '854': {}, '858': {}, '860': {},\
-             '862': {}, '864': {}, '876': {}, '877': {},\
-             '878': {}, '879': {}, '880': {}, '881': {},\
-             '882': {}, '883': {}, '884': {}, '885': {}, '886': {},\
-             '909':{}, '911':{}, '913':{}, '914':{}, '915':{}, '916':{}}
+    abase = {'1010': {}, '0': {}} #, '300': {}, '830': {}, '840': {},\
+    #         '850': {}, '854': {}, '858': {}, '860': {},\
+    #         '862': {}, '864': {}, '876': {}, '877': {},\
+    #         '878': {}, '879': {}, '880': {}, '881': {},\
+    #         '882': {}, '883': {}, '884': {}, '885': {}, '886': {},\
+    #         '909':{}, '911':{}, '913':{}, '914':{}, '915':{}, '916':{}}
 
     for a in abase:
         for i in range(num_classes):
@@ -244,4 +249,4 @@ if __name__ == "__main__":
 
 
     for a in abase:
-        train(class_no, args.batch_size, args.epochs, args.random_seed, abase[a])
+        train(args.dir, class_no, args.batch_size, args.epochs, args.random_seed, abase[a])
