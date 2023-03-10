@@ -55,7 +55,7 @@ def fwd_KL(P, Q, class_ratio, fill_zero=True):
     P = np.asarray(P)  # the ground_truth matrix
     Q = np.asarray(Q)  # the estimate
     #P /= P.sum(axis=1, keepdims=True) #this can make a difference
-    Q /= Q.sum(axis=1, keepdims=True)
+    Q /= Q.sum(axis=1, keepdims=True)[:, np.newaxis]
     # assert P.shape[0] == P.shape[1]
     if P.shape[0] != P.shape[1]:
         raise ValueError('The first matrice should be square!')
